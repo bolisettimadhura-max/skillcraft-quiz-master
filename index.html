@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkillCraft Quiz Master</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#0f172a,#1e293b,#3b0764);
+color:white;
+padding:20px;
+}
+
+.container{
+width:100%;
+max-width:700px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(15px);
+padding:30px;
+border-radius:25px;
+box-shadow:0 8px 30px rgba(0,0,0,.4);
+}
+
+.brand{
+text-align:center;
+margin-bottom:20px;
+}
+
+.brand h2{
+color:#60a5fa;
+}
+
+.brand p{
+color:#cbd5e1;
+font-size:14px;
+}
+
+.screen{
+display:none;
+}
+
+.active{
+display:block;
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:14px;
+border:none;
+outline:none;
+border-radius:12px;
+margin:15px 0;
+font-size:16px;
+}
+
+button{
+padding:12px 20px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-weight:600;
+background:#3b82f6;
+color:white;
+transition:.3s;
+}
+
+button:hover{
+transform:translateY(-2px);
+}
+
+.center{
+text-align:center;
+}
+
+.progress{
+height:10px;
+background:#334155;
+border-radius:20px;
+overflow:hidden;
+margin:15px 0;
+}
+
+.progress-bar{
+height:100%;
+width:0%;
+background:#22c55e;
+transition:.4s;
+}
+
+.info{
+display:flex;
+justify-content:space-between;
+margin-bottom:15px;
+}
+
+.question{
+font-size:22px;
+font-weight:600;
+margin-bottom:20px;
+}
+
+.option{
+background:rgba(255,255,255,.08);
+padding:15px;
+border-radius:12px;
+margin-bottom:10px;
+cursor:pointer;
+transition:.3s;
+}
+
+.option:hover{
+background:#3b82f6;
+}
+
+.option.selected{
+background:#22c55e;
+}
+
+.result{
+text-align:center;
+}
+
+.result h2{
+font-size:35px;
+margin-bottom:15px;
+color:#22c55e;
+}
+
+.result p{
+font-size:20px;
+margin-bottom:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="brand">
+<h2>SkillCraft Technology</h2>
+<p>Task 03 - Quiz Game Application</p>
+</div>
+
+<!-- Welcome -->
+
+<div id="welcome" class="screen active">
+
+<h1>🏆 SkillCraft Quiz Master</h1>
+
+<input
+type="text"
+id="playerName"
+placeholder="Enter Your Name">
+
+<div class="center">
+<button onclick="startQuiz()">
+Start Quiz
+</button>
+</div>
+
+</div>
+
+<!-- Quiz -->
+
+<div id="quiz" class="screen">
+
+<div class="info">
+<span id="questionCount"></span>
+<span>⏳ <span id="timer">15</span>s</span>
+</div>
+
+<div class="progress">
+<div class="progress-bar"
+id="progressBar"></div>
+</div>
+
+<div class="question"
+id="question"></div>
+
+<div id="options"></div>
+
+<div class="center" style="margin-top:15px;">
+<button onclick="nextQuestion()">
+Next Question
+</button>
+</div>
+
+</div>
+
+<!-- Result -->
+
+<div id="result" class="screen result">
+
+<h2>🎉 Quiz Completed</h2>
+
+<p id="playerResult"></p>
+
+<p id="scoreText"></p>
+
+<button onclick="location.reload()">
+Play Again
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const questions=[
+
+{
+question:"What does HTML stand for?",
+options:[
+"Hyper Text Markup Language",
+"High Transfer Machine Language",
+"Home Tool Markup Language",
+"Hyper Transfer Markup Level"
+],
+answer:"Hyper Text Markup Language"
+},
+
+{
+question:"Which language is used for styling web pages?",
+options:[
+"Python",
+"CSS",
+"Java",
+"C++"
+],
+answer:"CSS"
+},
+
+{
+question:"Which language runs in browser?",
+options:[
+"Java",
+"C",
+"JavaScript",
+"Python"
+],
+answer:"JavaScript"
+},
+
+{
+question:"Which company developed JavaScript?",
+options:[
+"Microsoft",
+"Netscape",
+"Google",
+"Apple"
+],
+answer:"Netscape"
+},
+
+{
+question:"CSS stands for?",
+options:[
+"Cascading Style Sheets",
+"Creative Style Sheets",
+"Computer Style Sheets",
+"Colorful Style Sheets"
+],
+answer:"Cascading Style Sheets"
+},
+
+{
+question:"Which tag creates a hyperlink?",
+options:[
+"<p>",
+"<a>",
+"<div>",
+"<h1>"
+],
+answer:"<a>"
+},
+
+{
+question:"Which HTML tag is used for images?",
+options:[
+"<img>",
+"<image>",
+"<pic>",
+"<src>"
+],
+answer:"<img>"
+},
+
+{
+question:"Which symbol is used for comments in JS?",
+options:[
+"//",
+"##",
+"**",
+"%%"
+],
+answer:"//"
+},
+
+{
+question:"Which property changes text color?",
+options:[
+"font-color",
+"color",
+"text-color",
+"background"
+],
+answer:"color"
+},
+
+{
+question:"GitHub is mainly used for?",
+options:[
+"Gaming",
+"Video Editing",
+"Version Control",
+"Music"
+],
+answer:"Version Control"
+}
+
+];
+
+let current=0;
+let score=0;
+let selected=null;
+let timer=15;
+let interval;
+
+function startQuiz(){
+
+const name=
+document.getElementById("playerName").value;
+
+if(name===""){
+alert("Enter your name");
+return;
+}
+
+document.getElementById("welcome")
+.classList.remove("active");
+
+document.getElementById("quiz")
+.classList.add("active");
+
+loadQuestion();
+}
+
+function loadQuestion(){
+
+selected=null;
+
+const q=questions[current];
+
+document.getElementById("questionCount")
+.innerText=
+`Question ${current+1}/${questions.length}`;
+
+document.getElementById("question")
+.innerText=q.question;
+
+const optionsDiv=
+document.getElementById("options");
+
+optionsDiv.innerHTML="";
+
+q.options.forEach(option=>{
+
+const div=
+document.createElement("div");
+
+div.classList.add("option");
+
+div.innerText=option;
+
+div.onclick=()=>{
+
+document
+.querySelectorAll(".option")
+.forEach(o=>
+o.classList.remove("selected"));
+
+div.classList.add("selected");
+
+selected=option;
+
+};
+
+optionsDiv.appendChild(div);
+
+});
+
+document.getElementById("progressBar")
+.style.width=
+((current)/questions.length)*100+"%";
+
+startTimer();
+}
+
+function startTimer(){
+
+clearInterval(interval);
+
+timer=15;
+
+document.getElementById("timer")
+.innerText=timer;
+
+interval=setInterval(()=>{
+
+timer--;
+
+document.getElementById("timer")
+.innerText=timer;
+
+if(timer===0){
+
+nextQuestion();
+
+}
+
+},1000);
+}
+
+function nextQuestion(){
+
+clearInterval(interval);
+
+if(selected===questions[current].answer){
+
+score++;
+
+}
+
+current++;
+
+if(current<questions.length){
+
+loadQuestion();
+
+}else{
+
+showResult();
+
+}
+
+}
+
+function showResult(){
+
+document.getElementById("quiz")
+.classList.remove("active");
+
+document.getElementById("result")
+.classList.add("active");
+
+const player=
+document.getElementById("playerName").value;
+
+document.getElementById("playerResult")
+.innerText=
+`Congratulations ${player}!`;
+
+document.getElementById("scoreText")
+.innerText=
+`Your Score: ${score} / ${questions.length}`;
+}
+
+</script>
+
+</body>
+</html>
